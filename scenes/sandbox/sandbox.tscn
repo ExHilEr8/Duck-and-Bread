@@ -1,0 +1,79 @@
+[gd_scene load_steps=9 format=3 uid="uid://cln8728a2x4mu"]
+
+[ext_resource type="Texture2D" uid="uid://d3bph7ac4oe6" path="res://scenes/sandbox/realchicken.png" id="1_c6vj6"]
+[ext_resource type="Texture2D" uid="uid://dob3i4bda12k6" path="res://scenes/sandbox/stage2.png" id="1_fj5dx"]
+[ext_resource type="PackedScene" uid="uid://d4mjcwaqpca" path="res://scenes/components/HealthBarComponent.tscn" id="1_ondkr"]
+[ext_resource type="Texture2D" uid="uid://rj76ks1di3j6" path="res://scenes/sandbox/enemy_placeholder.png" id="2_57cbk"]
+[ext_resource type="Script" path="res://scenes/sandbox/player_movement.gd" id="3_cwjlg"]
+[ext_resource type="PackedScene" uid="uid://bp5tmvg660k0t" path="res://scenes/components/HealthComponent.tscn" id="4_up54x"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_l0sen"]
+radius = 0.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2qgl4"]
+radius = 33.1361
+
+[node name="Node2D" type="Node2D"]
+
+[node name="GUI" type="CanvasLayer" parent="."]
+
+[node name="ProgressBar" type="ProgressBar" parent="GUI"]
+self_modulate = Color(0, 1, 0, 1)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_right = 300.0
+offset_bottom = 20.0
+grow_horizontal = 2
+rounded = true
+allow_greater = true
+show_percentage = false
+
+[node name="HealthBarComponent" parent="GUI/ProgressBar" node_paths=PackedStringArray("health_component", "health_bar", "health_bar_label") instance=ExtResource("1_ondkr")]
+health_component = NodePath("../../../EnemyPlaceholder/HealthComponent")
+health_bar = NodePath("..")
+health_bar_label = NodePath("../Label")
+
+[node name="Label" type="Label" parent="GUI/ProgressBar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Stage" type="Sprite2D" parent="."]
+position = Vector2(316, 177)
+texture = ExtResource("1_fj5dx")
+
+[node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("sprite")]
+script = ExtResource("3_cwjlg")
+sprite = NodePath("PlayerSprite")
+
+[node name="PlayerSprite" type="Sprite2D" parent="Player"]
+texture = ExtResource("1_c6vj6")
+
+[node name="PlayerDamageHitBox" type="CollisionShape2D" parent="Player"]
+position = Vector2(6, 35)
+shape = SubResource("CircleShape2D_l0sen")
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+
+[node name="Area2D" type="Area2D" parent="Player"]
+position = Vector2(6, 35)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Area2D"]
+shape = SubResource("CircleShape2D_2qgl4")
+
+[node name="EnemyPlaceholder" type="Sprite2D" parent="."]
+position = Vector2(318, 159)
+texture = ExtResource("2_57cbk")
+
+[node name="HealthComponent" parent="EnemyPlaceholder" instance=ExtResource("4_up54x")]
